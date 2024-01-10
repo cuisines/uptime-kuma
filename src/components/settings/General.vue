@@ -145,7 +145,7 @@
                         class="form-control"
                         name="devopsDirectory"
                         placeholder="org/project"
-                        pattern="[a-zA-Z0-9]+\/[a-zA-Z0-9]+"
+                        pattern="[a-zA-Z0-9-]+\/[a-zA-Z0-9-]+"
                         autocomplete="new-password"
                     />
                 </div>
