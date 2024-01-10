@@ -132,6 +132,26 @@
                 <div class="form-text"></div>
             </div>
 
+            <!-- DevOps project directory -->
+            <div class="mb-4">
+                <label class="form-label" for="devopsDirectory">
+                    {{ $t("DevOps project directory") }}
+                </label>
+
+                <div class="input-group mb-3">
+                    <input
+                        id="devopsDirectory"
+                        v-model="settings.devopsDirectory"
+                        class="form-control"
+                        name="devopsDirectory"
+                        placeholder="org/project"
+                        pattern="[a-zA-Z0-9]+\/[a-zA-Z0-9]+"
+                        autocomplete="new-password"
+                    />
+                </div>
+                <div class="form-text">For interactive buttons on the Teams notification, allowing you to create a Ticket directly from Teams or look for existing tickets.</div>
+            </div>
+
             <!-- Steam API Key -->
             <div class="mb-4">
                 <label class="form-label" for="steamAPIKey">
