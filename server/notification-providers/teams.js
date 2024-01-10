@@ -1,6 +1,7 @@
 const NotificationProvider = require("./notification-provider");
 const axios = require("axios");
 const { DOWN, UP } = require("../../src/util");
+const { setting } = require("../util-server");
 
 class Teams extends NotificationProvider {
     name = "teams";
@@ -9,13 +10,14 @@ class Teams extends NotificationProvider {
      * Generate the message to send
      * @param {const} status The status constant
      * @param {string} monitorName Name of monitor
+     * @param {string} monitorUrl URL of monitor
      * @returns {string} Status message
      */
-    _statusMessageFactory = (status, monitorName) => {
+    _statusMessageFactory = (status, monitorName, monitorUrl) => {
         if (status === DOWN) {
-            return `🔴 Application [${monitorName}] went down`;
+            return `🔴 "${monitorName}" (${monitorUrl}) is offline!`;
         } else if (status === UP) {
-            return `✅ Application [${monitorName}] is back online`;
+            return `✅ "${monitorName}" (${monitorUrl}) is back online!`;
         }
         return "Notification";
     };
@@ -42,33 +44,79 @@ class Teams extends NotificationProvider {
      * @param {string} args.monitorMessage Message to send
      * @param {string} args.monitorName Name of monitor affected
      * @param {string} args.monitorUrl URL of monitor affected
+     * @param {number} args.monitorId ID of monitor affected
      * @returns {object} Notification payload
      */
-    _notificationPayloadFactory = ({
+    _notificationPayloadFactory = async ({
         status,
         monitorMessage,
         monitorName,
         monitorUrl,
+        monitorId,
     }) => {
         const notificationMessage = this._statusMessageFactory(
             status,
-            monitorName
+            monitorName,
+            monitorUrl
         );
 
-        const facts = [];
+        const baseURL = await setting("primaryBaseURL");
+        const devopsDirectory = await setting("devopsDirectory");
 
-        if (monitorName) {
-            facts.push({
-                name: "Monitor",
-                value: monitorName,
+        const actions = [];
+
+        if (baseURL) {
+            actions.push({
+                "@type": "OpenUri",
+                name: "View dashboard",
+                targets: [
+                    {
+                        os: "default",
+                        uri: baseURL + "/dashboard",
+                    },
+                ],
+            });
+
+            actions.push({
+                "@type": "OpenUri",
+                name: "View monitor",
+                targets: [
+                    {
+                        os: "default",
+                        uri: baseURL + "/dashboard/" + monitorId,
+                    },
+                ],
             });
         }
 
-        if (monitorUrl && monitorUrl !== "https://") {
-            facts.push({
-                name: "URL",
-                value: monitorUrl,
-            });
+        if (devopsDirectory) {
+            if (status === UP) {
+                actions.push({
+                    "@type": "OpenUri",
+                    name: "Search for DevOps Tickets",
+                    targets: [
+                        {
+                            os: "default",
+                            uri:
+                                "https://dev.azure.com/" + devopsDirectory + "/_workitems/recentlyupdated/",
+                        },
+                    ],
+                });
+            }
+
+            if (status === DOWN) {
+                actions.push({
+                    "@type": "OpenUri",
+                    name: "Create DevOps Ticket",
+                    targets: [
+                        {
+                            os: "default",
+                            uri:
+                                "https://dev.azure.com/" + devopsDirectory + "/_workitems/create/Issue?[System.Title]=" + monitorName + "%20(" + monitorUrl + ")%20is%20down&[System.Description]=" + monitorMessage,
+                        },
+                    ],
+                });
+            }
         }
 
         return {
@@ -78,19 +126,11 @@ class Teams extends NotificationProvider {
             summary: notificationMessage,
             sections: [
                 {
-                    activityImage:
-                        "https://raw.githubusercontent.com/louislam/uptime-kuma/master/public/icon.png",
-                    activityTitle: "**Uptime Kuma**",
-                },
-                {
                     activityTitle: notificationMessage,
-                },
-                {
-                    activityTitle: "**Description**",
-                    text: monitorMessage,
-                    facts,
+                    activitySubtitle: "Reason: " + monitorMessage,
                 },
             ],
+            "potentialAction": actions,
         };
     };
 
@@ -110,8 +150,8 @@ class Teams extends NotificationProvider {
      * @param {string} msg Message to send
      * @returns {Promise<void>}
      */
-    _handleGeneralNotification = (webhookUrl, msg) => {
-        const payload = this._notificationPayloadFactory({
+    _handleGeneralNotification = async (webhookUrl, msg) => {
+        const payload = await this._notificationPayloadFactory({
             monitorMessage: msg
         });
 
@@ -145,10 +185,11 @@ class Teams extends NotificationProvider {
                     break;
             }
 
-            const payload = this._notificationPayloadFactory({
+            const payload = await this._notificationPayloadFactory({
                 monitorMessage: heartbeatJSON.msg,
                 monitorName: monitorJSON.name,
                 monitorUrl: url,
+                monitorId: monitorJSON.id,
                 status: heartbeatJSON.status,
             });
 
