@@ -157,6 +157,7 @@ class Monitor extends BeanModel {
             kafkaProducerMessage: this.kafkaProducerMessage,
             screenshot,
             remote_browser: this.remote_browser,
+            pm_mail: this.pm_mail,
         };
 
         if (includeSensitiveData) {
@@ -186,6 +187,8 @@ class Monitor extends BeanModel {
                 tlsCert: this.tlsCert,
                 tlsKey: this.tlsKey,
                 kafkaProducerSaslOptions: JSON.parse(this.kafkaProducerSaslOptions),
+                customer_mail: this.customer_mail,
+
             };
         }
 
