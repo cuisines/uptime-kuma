@@ -105,6 +105,12 @@
                                 <input id="url" v-model="monitor.url" type="url" class="form-control" pattern="https?://.+" required>
                             </div>
 
+                            <!-- Description -->
+                            <div class="my-3">
+                                <label for="description" class="form-label">{{ $t("Description") }}</label>
+                                <input id="description" v-model="monitor.description" type="text" class="form-control">
+                            </div>
+
                             <!-- gRPC URL -->
                             <div v-if="monitor.type === 'grpc-keyword' " class="my-3">
                                 <label for="grpc-url" class="form-label">{{ $t("URL") }}</label>
@@ -434,6 +440,20 @@
                                 </div>
                             </template>
 
+                            <!-- Parent Monitor -->
+                            <div class="my-3">
+                                <label for="monitorGroupSelector" class="form-label">{{ $t("Monitor Group") }}</label>
+                                <ActionSelect
+                                    id="monitorGroupSelector"
+                                    v-model="monitor.parent"
+                                    :action-aria-label="$t('openModalTo', 'setup a new monitor group')"
+                                    :options="parentMonitorOptionsList"
+                                    :disabled="sortedGroupMonitorList.length === 0 && draftGroupName == null"
+                                    :icon="'plus'"
+                                    :action="() => $refs.createGroupDialog.show()"
+                                />
+                            </div>
+
                             <!-- Interval -->
                             <div class="my-3">
                                 <label for="interval" class="form-label">{{ $t("Heartbeat Interval") }} ({{ $t("checkEverySecond", [ monitor.interval ]) }})</label>
@@ -546,35 +566,44 @@
                                         {{ $t("acceptedStatusCodesDescription") }}
                                     </div>
                                 </div>
+
+                                <!-- Proxies -->
+                                <div v-if="monitor.type === 'http' || monitor.type === 'keyword' || monitor.type === 'json-query'">
+                                    <h2 class="mt-5 mb-2">{{ $t("Proxy") }}</h2>
+                                    <p v-if="$root.proxyList.length === 0">
+                                        {{ $t("Not available, please setup.") }}
+                                    </p>
+
+                                    <div v-if="$root.proxyList.length > 0" class="form-check my-3">
+                                        <input id="proxy-disable" v-model="monitor.proxyId" :value="null" name="proxy" class="form-check-input" type="radio">
+                                        <label class="form-check-label" for="proxy-disable">{{ $t("No Proxy") }}</label>
+                                    </div>
+
+                                    <div v-for="proxy in $root.proxyList" :key="proxy.id" class="form-check my-3">
+                                        <input :id="`proxy-${proxy.id}`" v-model="monitor.proxyId" :value="proxy.id" name="proxy" class="form-check-input" type="radio">
+
+                                        <label class="form-check-label" :for="`proxy-${proxy.id}`">
+                                            {{ proxy.host }}:{{ proxy.port }} ({{ proxy.protocol }})
+                                            <a href="#" @click="$refs.proxyDialog.show(proxy.id)">{{ $t("Edit") }}</a>
+                                        </label>
+
+                                        <span v-if="proxy.default === true" class="badge bg-primary ms-2">{{ $t("default") }}</span>
+                                    </div>
+
+                                    <button class="btn btn-primary me-2" type="button" @click="$refs.proxyDialog.show()">
+                                        {{ $t("Setup Proxy") }}
+                                    </button>
+                                </div>
                             </template>
-
-                            <!-- Parent Monitor -->
-                            <div class="my-3">
-                                <label for="monitorGroupSelector" class="form-label">{{ $t("Monitor Group") }}</label>
-                                <ActionSelect
-                                    id="monitorGroupSelector"
-                                    v-model="monitor.parent"
-                                    :action-aria-label="$t('openModalTo', 'setup a new monitor group')"
-                                    :options="parentMonitorOptionsList"
-                                    :disabled="sortedGroupMonitorList.length === 0 && draftGroupName == null"
-                                    :icon="'plus'"
-                                    :action="() => $refs.createGroupDialog.show()"
-                                />
-                            </div>
-
-                            <!-- Description -->
-                            <div class="my-3">
-                                <label for="description" class="form-label">{{ $t("Description") }}</label>
-                                <input id="description" v-model="monitor.description" type="text" class="form-control">
-                            </div>
-
-                            <div class="my-3">
-                                <tags-manager ref="tagsManager" :pre-selected-tags="monitor.tags"></tags-manager>
-                            </div>
                         </div>
 
                         <div class="col-md-6">
                             <div v-if="$root.isMobile" class="mt-3" />
+
+                            <!-- Tags -->
+                            <div class="my-3">
+                                <tags-manager ref="tagsManager" :pre-selected-tags="monitor.tags"></tags-manager>
+                            </div>
 
                             <!-- Notifications -->
                             <h2 class="mb-2">{{ $t("Notifications") }}</h2>
@@ -596,34 +625,6 @@
                             <button class="btn btn-primary me-2" type="button" @click="$refs.notificationDialog.show()">
                                 {{ $t("Setup Notification") }}
                             </button>
-
-                            <!-- Proxies -->
-                            <div v-if="monitor.type === 'http' || monitor.type === 'keyword' || monitor.type === 'json-query'">
-                                <h2 class="mt-5 mb-2">{{ $t("Proxy") }}</h2>
-                                <p v-if="$root.proxyList.length === 0">
-                                    {{ $t("Not available, please setup.") }}
-                                </p>
-
-                                <div v-if="$root.proxyList.length > 0" class="form-check my-3">
-                                    <input id="proxy-disable" v-model="monitor.proxyId" :value="null" name="proxy" class="form-check-input" type="radio">
-                                    <label class="form-check-label" for="proxy-disable">{{ $t("No Proxy") }}</label>
-                                </div>
-
-                                <div v-for="proxy in $root.proxyList" :key="proxy.id" class="form-check my-3">
-                                    <input :id="`proxy-${proxy.id}`" v-model="monitor.proxyId" :value="proxy.id" name="proxy" class="form-check-input" type="radio">
-
-                                    <label class="form-check-label" :for="`proxy-${proxy.id}`">
-                                        {{ proxy.host }}:{{ proxy.port }} ({{ proxy.protocol }})
-                                        <a href="#" @click="$refs.proxyDialog.show(proxy.id)">{{ $t("Edit") }}</a>
-                                    </label>
-
-                                    <span v-if="proxy.default === true" class="badge bg-primary ms-2">{{ $t("default") }}</span>
-                                </div>
-
-                                <button class="btn btn-primary me-2" type="button" @click="$refs.proxyDialog.show()">
-                                    {{ $t("Setup Proxy") }}
-                                </button>
-                            </div>
 
                             <!-- Kafka SASL Options -->
                             <!-- Kafka Producer only -->
