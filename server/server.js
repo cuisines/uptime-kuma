@@ -830,6 +830,8 @@ let needSetup = false;
                     monitor.kafkaProducerAllowAutoTopicCreation;
                 bean.gamedigGivenPortOnly = monitor.gamedigGivenPortOnly;
                 bean.remote_browser = monitor.remote_browser;
+                bean.pm_mail = monitor.pm_mail;
+                bean.customer_mail = monitor.customer_mail;
 
                 bean.validate();
 

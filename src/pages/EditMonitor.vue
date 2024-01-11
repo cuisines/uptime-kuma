@@ -605,6 +605,18 @@
                                 <tags-manager ref="tagsManager" :pre-selected-tags="monitor.tags"></tags-manager>
                             </div>
 
+                            <!-- Mail addresses -->
+                            <h2 class="mb-2">{{ $t("Mail addresses") }}</h2>
+                            <div class="my-3">
+                                <label for="pm_mail" class="form-label">{{ $t("Project Manager mail address") }}</label>
+                                <input id="pm_mail" v-model="monitor.pm_mail" type="text" class="form-control" :placeholder="$t('mail@company.com')" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$">
+                            </div>
+
+                            <div class="my-3">
+                                <label for="customer_mail" class="form-label">{{ $t("Customer mail address") }}</label>
+                                <input id="customer_mail" v-model="monitor.customer_mail" type="text" class="form-control" :placeholder="$t('mail@company.com')" pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$">
+                            </div>
+
                             <!-- Notifications -->
                             <h2 class="mb-2">{{ $t("Notifications") }}</h2>
                             <p v-if="$root.notificationList.length === 0">
@@ -948,7 +960,9 @@ const monitorDefaults = {
     kafkaProducerSsl: false,
     kafkaProducerAllowAutoTopicCreation: false,
     gamedigGivenPortOnly: true,
-    remote_browser: null
+    remote_browser: null,
+    pm_mail: "",
+    customer_mail: "",
 };
 
 export default {
