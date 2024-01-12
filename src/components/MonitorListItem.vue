@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div @click="changeCollapsed">
         <div :style="depthMargin">
             <!-- Checkbox -->
             <div v-if="isSelectMode" class="select-input-wrapper">
@@ -17,7 +17,7 @@
                     <div class="col-9 col-md-8 small-padding" :class="{ 'monitor-item': $root.userHeartbeatBar == 'bottom' || $root.userHeartbeatBar == 'none' }">
                         <div class="info">
                             <Uptime :monitor="monitor" type="24" :pill="true" />
-                            <span v-if="hasChildren" class="collapse-padding" @click.prevent="changeCollapsed">
+                            <span v-if="hasChildren" class="collapse-padding">
                                 <font-awesome-icon icon="chevron-down" class="animated" :class="{ collapsed: isCollapsed}" />
                             </span>
                             {{ monitor.name }}
