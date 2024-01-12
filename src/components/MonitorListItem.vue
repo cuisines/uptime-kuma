@@ -1,6 +1,6 @@
 <template>
-    <div @click="changeCollapsed">
-        <div :style="depthMargin">
+    <div>
+        <div :style="depthMargin" @click="changeCollapsed">
             <!-- Checkbox -->
             <div v-if="isSelectMode" class="select-input-wrapper">
                 <input
