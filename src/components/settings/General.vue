@@ -152,24 +152,6 @@
                 <div class="form-text">For interactive buttons on the Teams notification, allowing you to create a Ticket directly from Teams or look for existing tickets.</div>
             </div>
 
-            <!-- Steam API Key -->
-            <div class="mb-4">
-                <label class="form-label" for="steamAPIKey">
-                    {{ $t("Steam API Key") }}
-                </label>
-                <HiddenInput
-                    id="steamAPIKey"
-                    v-model="settings.steamAPIKey"
-                    autocomplete="new-password"
-                />
-                <div class="form-text">
-                    {{ $t("steamApiKeyDescription") }}
-                    <a href="https://steamcommunity.com/dev" target="_blank">
-                        https://steamcommunity.com/dev
-                    </a>
-                </div>
-            </div>
-
             <!-- DNS Cache (nscd) -->
             <div v-if="$root.info.isContainer" class="mb-4">
                 <label class="form-label">
@@ -242,15 +224,10 @@
 </template>
 
 <script>
-import HiddenInput from "../../components/HiddenInput.vue";
 import dayjs from "dayjs";
 import { timezoneList } from "../../util-frontend";
 
 export default {
-    components: {
-        HiddenInput,
-    },
-
     data() {
         return {
             timezoneList: timezoneList(),

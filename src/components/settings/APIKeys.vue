@@ -57,6 +57,28 @@
             <a href="https://github.com/louislam/uptime-kuma/wiki/API-Keys" target="_blank">{{ $t("Learn More") }}</a>
         </div>
 
+        <form class="my-4" autocomplete="off" @submit.prevent="saveSteamAPIKey">
+            <div class="mb-4">
+                <label class="form-label" for="steamAPIKey">
+                    {{ $t("Steam API Key") }}
+                </label>
+                <HiddenInput id="steamAPIKey" v-model="settings.steamAPIKey" autocomplete="new-password" />
+                <div class="form-text">
+                    {{ $t("steamApiKeyDescription") }}
+                    <a href="https://steamcommunity.com/dev" target="_blank">
+                        https://steamcommunity.com/dev
+                    </a>
+                </div>
+            </div>
+
+            <!-- Save Button -->
+            <div>
+                <button class="btn btn-primary" type="submit">
+                    {{ $t("Save") }}
+                </button>
+            </div>
+        </form>
+
         <Confirm ref="confirmPause" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="disableKey">
             {{ $t("disableAPIKeyMsg") }}
         </Confirm>
@@ -72,11 +94,13 @@
 <script>
 import APIKeyDialog from "../../components/APIKeyDialog.vue";
 import Confirm from "../Confirm.vue";
+import HiddenInput from "../../components/HiddenInput.vue";
 
 export default {
     components: {
         APIKeyDialog,
         Confirm,
+        HiddenInput,
     },
     data() {
         return {
@@ -87,6 +111,15 @@ export default {
         keyList() {
             let result = Object.values(this.$root.apiKeyList);
             return result;
+        },
+        settings() {
+            return this.$parent.$parent.$parent.settings;
+        },
+        saveSettings() {
+            return this.$parent.$parent.$parent.saveSettings;
+        },
+        settingsLoaded() {
+            return this.$parent.$parent.$parent.settingsLoaded;
         },
     },
 
@@ -140,6 +173,14 @@ export default {
             this.$root.getSocket().emit("enableAPIKey", id, (res) => {
                 this.$root.toastRes(res);
             });
+        },
+
+        /**
+         * Save the Steam API key
+         * @returns {void}
+         */
+        saveSteamAPIKey() {
+            this.saveSettings();
         },
     },
 };
