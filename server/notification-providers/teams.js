@@ -13,9 +13,15 @@ class Teams extends NotificationProvider {
      * @param {string} monitorUrl URL of monitor
      * @returns {string} Status message
      */
-    _statusMessageFactory = (status, monitorName, monitorUrl) => {
+    _statusMessageFactory = (status, monitorName, monitorUrl, monitorMaxRetries) => {
         if (status === DOWN) {
-            return `🔴 "${monitorName}" (${monitorUrl}) is offline!`;
+            if (monitorMaxRetries === 1) {
+                return `🔴 "${monitorName}" (${monitorUrl}) is offline for ${monitorMaxRetries} minute!`;
+            } else if (monitorMaxRetries > 0) {
+                return `🔴 "${monitorName}" (${monitorUrl}) is offline for ${monitorMaxRetries} minutes!`;
+            } else {
+                return `🔴 "${monitorName}" (${monitorUrl}) is offline!`;
+            }
         } else if (status === UP) {
             return `✅ "${monitorName}" (${monitorUrl}) is back online!`;
         }
@@ -45,6 +51,7 @@ class Teams extends NotificationProvider {
      * @param {string} args.monitorName Name of monitor affected
      * @param {string} args.monitorUrl URL of monitor affected
      * @param {number} args.monitorId ID of monitor affected
+     * @param {number} args.monitorMaxRetries Number of retries before notification
      * @returns {object} Notification payload
      */
     _notificationPayloadFactory = async ({
@@ -53,11 +60,13 @@ class Teams extends NotificationProvider {
         monitorName,
         monitorUrl,
         monitorId,
+        monitorMaxRetries,
     }) => {
         const notificationMessage = this._statusMessageFactory(
             status,
             monitorName,
-            monitorUrl
+            monitorUrl,
+            monitorMaxRetries
         );
 
         const baseURL = await setting("primaryBaseURL");
@@ -190,6 +199,7 @@ class Teams extends NotificationProvider {
                 monitorName: monitorJSON.name,
                 monitorUrl: url,
                 monitorId: monitorJSON.id,
+                monitorMaxRetries: monitorJSON.maxretries,
                 status: heartbeatJSON.status,
             });
 
