@@ -12,4 +12,4 @@ exports.down = function (knex) {
             table.dropColumn("pm_mail");
             table.dropColumn("customer_mail");
         });
-}
+};
