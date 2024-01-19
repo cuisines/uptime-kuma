@@ -1514,6 +1514,27 @@ let needSetup = false;
             }
         });
 
+        socket.on("getPipelines", async (callback) => {
+            try {
+                checkLogin(socket);
+
+                log.info("pipeline", `Get Pipelines User ID: ${socket.userID}`);
+
+                const list = await R.findAll("pipeline");
+
+                callback({
+                    ok: true,
+                    pipelines: list,
+                });
+
+            } catch (e) {
+                callback({
+                    ok: false,
+                    msg: e.message,
+                });
+            }
+        });
+
         // Status Page Socket Handler for admin only
         statusPageSocketHandler(socket);
         cloudflaredSocketHandler(socket);

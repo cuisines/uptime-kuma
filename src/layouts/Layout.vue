@@ -27,6 +27,11 @@
                     </router-link>
                 </li>
                 <li v-if="$root.loggedIn" class="nav-item me-2">
+                    <router-link to="/pipelines" class="nav-link">
+                        <font-awesome-icon icon="arrow-turn-up" /> {{ $t("Pipelines") }}
+                    </router-link>
+                </li>
+                <li v-if="$root.loggedIn" class="nav-item me-2">
                     <router-link to="/dashboard" class="nav-link">
                         <font-awesome-icon icon="tachometer-alt" /> {{ $t("Dashboard") }}
                     </router-link>
