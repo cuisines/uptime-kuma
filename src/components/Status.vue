@@ -7,22 +7,22 @@ export default {
     props: {
         /** Current status of monitor */
         status: {
-            type: Number,
+            type: Number || String,
             default: 0,
         }
     },
 
     computed: {
         color() {
-            if (this.status === 0) {
+            if (this.status === 0 || this.status === "failed") {
                 return "danger";
             }
 
-            if (this.status === 1) {
+            if (this.status === 1 || this.status === "succeeded") {
                 return "primary";
             }
 
-            if (this.status === 2) {
+            if (this.status === 2 || this.status === "stopped" || this.status === "partially succeeded") {
                 return "warning";
             }
 
@@ -50,6 +50,21 @@ export default {
                 return this.$t("statusMaintenance");
             }
 
+            if (this.status === "failed") {
+                return this.$t("Failed");
+            }
+
+            if (this.status === "succeeded") {
+                return this.$t("Succeeded");
+            }
+
+            if (this.status === "stopped") {
+                return this.$t("Stopped");
+            }
+
+            if (this.status === "partially succeeded") {
+                return this.$t("Partially succeeded");
+            }
             return this.$t("Unknown");
         },
     },

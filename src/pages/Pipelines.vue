@@ -16,7 +16,7 @@
                     <tbody>
                         <tr v-for="(pipeline, index) in pipelines.slice().reverse()" :key="index" :class="{ 'shadow-box': $root.windowWidth <= 550}">
                             <td><a :href="pipeline._url" target="_blank">{{ pipeline._project }}</a></td>
-                            <td>{{ pipeline._status }}</td>
+                            <td><Status :status="pipeline._status" /></td>
                             <td>{{ pipeline._message }}</td>
                             <td><Datetime :value="pipeline._timestamp * 1000" /></td>
                         </tr>
@@ -37,10 +37,12 @@
 
 <script>
 import Datetime from "../components/Datetime.vue";
+import Status from "../components/Status.vue";
 
 export default {
     components: {
         Datetime,
+        Status,
     },
 
     data() {
