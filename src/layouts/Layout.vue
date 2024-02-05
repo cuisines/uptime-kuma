@@ -28,7 +28,7 @@
                 </li>
                 <li v-if="$root.loggedIn" class="nav-item me-2">
                     <router-link to="/pipelines" class="nav-link">
-                        <font-awesome-icon icon="arrow-turn-up" /> {{ $t("Pipelines") }}
+                        <font-awesome-icon icon="rocket" /> {{ $t("Pipelines") }}
                     </router-link>
                 </li>
                 <li v-if="$root.loggedIn" class="nav-item me-2">
