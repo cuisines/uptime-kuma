@@ -11,7 +11,7 @@ exports.up = function (knex) {
             table.string("message").notNullable();
             table.integer("timestamp").notNullable();
         });
-}
+};
 
 exports.down = function (knex) {
     return knex.schema

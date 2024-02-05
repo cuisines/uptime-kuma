@@ -11,6 +11,7 @@ class Teams extends NotificationProvider {
      * @param {const} status The status constant
      * @param {string} monitorName Name of monitor
      * @param {string} monitorUrl URL of monitor
+     * @param {number} monitorMaxRetries Number of retries before notification
      * @returns {string} Status message
      */
     _statusMessageFactory = (status, monitorName, monitorUrl, monitorMaxRetries) => {
