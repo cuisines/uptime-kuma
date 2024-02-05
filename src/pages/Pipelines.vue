@@ -14,8 +14,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(pipeline, index) in pipelines.slice().reverse()" :key="index"
-                                :class="{ 'shadow-box': $root.windowWidth <= 550 }">
+                            <tr v-for="(pipeline, index) in pipelines.slice().reverse()" :key="index" :class="{ 'shadow-box': $root.windowWidth <= 550 }">
                                 <td><a :href="pipeline._url" target="_blank">{{ pipeline._project }}</a></td>
                                 <td>
                                     <Status :status="pipeline._status" />
