@@ -7,6 +7,7 @@ import DashboardHome from "./pages/DashboardHome.vue";
 import Details from "./pages/Details.vue";
 import EditMonitor from "./pages/EditMonitor.vue";
 import EditMaintenance from "./pages/EditMaintenance.vue";
+import Report from "./pages/Report.vue";
 import List from "./pages/List.vue";
 const Settings = () => import("./pages/Settings.vue");
 import Setup from "./pages/Setup.vue";
@@ -167,9 +168,13 @@ const routes = [
                         component: Pipelines,
                     },
                     {
+                        path: "/report",
+                        component: Report,
+                    },
+                    {
                         path: "/lighthouse",
                         component: Lighthouse,
-                    }
+                    },
                 ],
             },
         ],
