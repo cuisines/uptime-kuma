@@ -12,14 +12,18 @@ class Teams extends NotificationProvider {
      * @param {string} monitorName Name of monitor
      * @param {string} monitorUrl URL of monitor
      * @param {number} monitorMaxRetries Number of retries before notification
+     * @param {number} monitorRetryInterval Time between retries
      * @returns {string} Status message
      */
-    _statusMessageFactory = (status, monitorName, monitorUrl, monitorMaxRetries) => {
+    _statusMessageFactory = (status, monitorName, monitorUrl, monitorMaxRetries, monitorRetryInterval) => {
+
+        let downtime = monitorMaxRetries * monitorRetryInterval / 60;
+
         if (status === DOWN) {
-            if (monitorMaxRetries === 1) {
-                return `🔴 "${monitorName}" (${monitorUrl}) is offline for ${monitorMaxRetries} minute!`;
-            } else if (monitorMaxRetries > 0) {
-                return `🔴 "${monitorName}" (${monitorUrl}) is offline for ${monitorMaxRetries} minutes!`;
+            if (downtime === 1) {
+                return `🔴 "${monitorName}" (${monitorUrl}) is offline for ${downtime} minute!`;
+            } else if (downtime > 0) {
+                return `🔴 "${monitorName}" (${monitorUrl}) is offline for ${downtime} minutes!`;
             } else {
                 return `🔴 "${monitorName}" (${monitorUrl}) is offline!`;
             }
@@ -53,6 +57,7 @@ class Teams extends NotificationProvider {
      * @param {string} args.monitorUrl URL of monitor affected
      * @param {number} args.monitorId ID of monitor affected
      * @param {number} args.monitorMaxRetries Number of retries before notification
+     * @param {number} args.monitorRetryInterval Time between retries
      * @returns {object} Notification payload
      */
     _notificationPayloadFactory = async ({
@@ -62,12 +67,14 @@ class Teams extends NotificationProvider {
         monitorUrl,
         monitorId,
         monitorMaxRetries,
+        monitorRetryInterval,
     }) => {
         const notificationMessage = this._statusMessageFactory(
             status,
             monitorName,
             monitorUrl,
-            monitorMaxRetries
+            monitorMaxRetries,
+            monitorRetryInterval
         );
 
         const baseURL = await setting("primaryBaseURL");
@@ -201,6 +208,7 @@ class Teams extends NotificationProvider {
                 monitorUrl: url,
                 monitorId: monitorJSON.id,
                 monitorMaxRetries: monitorJSON.maxretries,
+                monitorRetryInterval: monitorJSON.retry_interval,
                 status: heartbeatJSON.status,
             });
 
