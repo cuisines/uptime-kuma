@@ -1535,6 +1535,27 @@ let needSetup = false;
             }
         });
 
+        socket.on("getLighthouseStats", async (callback) => {
+            try {
+                checkLogin(socket);
+
+                log.info("lighthouse", `Get Lighthouse Stats User ID: ${socket.userID}`);
+
+                const data = await R.findAll("lighthouse");
+
+                callback({
+                    ok: true,
+                    lighthouseStats: data,
+                });
+
+            } catch (e) {
+                callback({
+                    ok: false,
+                    msg: e.message,
+                });
+            }
+        });
+
         // Status Page Socket Handler for admin only
         statusPageSocketHandler(socket);
         cloudflaredSocketHandler(socket);
