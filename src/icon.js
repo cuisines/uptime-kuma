@@ -51,6 +51,7 @@ import {
     faClone,
     faCertificate,
     faRocket,
+    faChartPie,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -99,6 +100,7 @@ library.add(
     faClone,
     faCertificate,
     faRocket,
+    faChartPie,
 );
 
 export { FontAwesomeIcon };
