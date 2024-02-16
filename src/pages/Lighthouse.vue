@@ -5,7 +5,7 @@
             <p>{{ $t("Everytime the report script is run, Lighthouse scores are being fetched from the") }} <a href="https://developers.google.com/speed/docs/insights/v5/get-started">{{ $t("Google PageSpeed Insights API") }}</a> {{ $t("and saved in here.") }}</p>
             <div class="shadow-box shadow-box-with-fixed-bottom-bar">
                 <div class="shadow-box table-shadow-box" style="overflow-x: hidden;">
-                    <input type="text" v-model="searchQuery" placeholder="Search..." class="form-control" />
+                    <input v-model="searchQuery" type="text" placeholder="Search..." class="form-control" />
                     <table class="table table-borderless table-hover">
                         <thead>
                             <tr>
@@ -67,7 +67,7 @@ export default {
             if (!this.searchQuery) {
                 return this.lighthouseStats;
             }
-            return this.lighthouseStats.filter(stat => 
+            return this.lighthouseStats.filter(stat =>
                 stat._monitorName.toLowerCase().includes(this.searchQuery.toLowerCase())
             );
         }
@@ -99,10 +99,16 @@ export default {
             const monitorNames = await Promise.all(uniqueMonitorIDs.map(id => new Promise((resolve) => {
                 this.$root.getSocket().emit("getMonitor", id, (response) => {
                     if (response.ok) {
-                        resolve({ id, name: response.monitor.name });
+                        resolve({
+                            id,
+                            name: response.monitor.name
+                        });
                     } else {
                         console.error(`Failed to fetch monitor name for ID: ${id}`, response.msg);
-                        resolve({ id, name: id });
+                        resolve({
+                            id,
+                            name: id
+                        });
                     }
                 });
             })));

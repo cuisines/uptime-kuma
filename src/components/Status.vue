@@ -13,13 +13,13 @@ export default {
         /** Type of the status component */
         type: {
             type: String,
-            default: 'state',
+            default: "state",
         },
     },
     computed: {
         color() {
             // Add conditions based on the type prop
-            if (this.type === 'pipeline') {
+            if (this.type === "pipeline") {
                 if (this.status === "failed") {
                     return "danger";
                 }
@@ -36,7 +36,7 @@ export default {
                     return "maintenance";
                 }
 
-            } else if (this.type === 'state') {
+            } else if (this.type === "state") {
                 if (this.status === 0) {
                     return "danger";
                 }
@@ -53,7 +53,7 @@ export default {
                     return "maintenance";
                 }
 
-            } else if (this.type === 'lighthouse') {
+            } else if (this.type === "lighthouse") {
                 if (this.status > 90) {
                     return "primary";
                 } else if (this.status > 50) {
@@ -61,13 +61,13 @@ export default {
                 } else {
                     return "danger";
                 }
-            } else {
-                return 'secondary';
-            }
+            } 
+
+            return 'secondary';
         },
         text() {
             // Add conditions based on the type prop
-            if (this.type === 'pipeline') {
+            if (this.type === "pipeline") {
                 if (this.status === 0) {
                     return this.$t("Down");
                 }
@@ -84,7 +84,7 @@ export default {
                     return this.$t("statusMaintenance");
                 }
 
-            } else if (this.type === 'state') {
+            } else if (this.type === "state") {
                 if (this.status === 0) {
                     return this.$t("Down");
                 }
@@ -101,11 +101,11 @@ export default {
                     return this.$t("statusMaintenance");
                 }
 
-            } else if (this.type === 'lighthouse') {
+            } else if (this.type === "lighthouse") {
                 return this.status;
-            } else {
-                return this.$t("Unknown");
-            }
+            } 
+            
+            return this.$t("Unknown");
         },
     },
 };
