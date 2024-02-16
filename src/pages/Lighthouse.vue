@@ -2,8 +2,10 @@
     <transition name="slide-fade" appear>
         <div class="my-3">
             <h1>{{ $t("Lighthouse") }}</h1>
+            <p>{{ $t("Everytime the report script is run, Lighthouse scores are being fetched from the") }} <a href="https://developers.google.com/speed/docs/insights/v5/get-started">{{ $t("Google PageSpeed Insights API") }}</a> {{ $t("and saved in here.") }}</p>
             <div class="shadow-box shadow-box-with-fixed-bottom-bar">
                 <div class="shadow-box table-shadow-box" style="overflow-x: hidden;">
+                    <input type="text" v-model="searchQuery" placeholder="Search..." class="form-control" />
                     <table class="table table-borderless table-hover">
                         <thead>
                             <tr>
@@ -16,7 +18,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(lighthouseStat, index) in lighthouseStats.slice().reverse()" :key="index" :class="{ 'shadow-box': $root.windowWidth <= 550 }">
+                            <tr v-for="(lighthouseStat, index) in filteredLighthouseStats.slice().reverse()" :key="index" :class="{ 'shadow-box': $root.windowWidth <= 550 }">
                                 <td>
                                     <router-link :to="`/dashboard/${lighthouseStat._monitor}`">
                                         {{ lighthouseStat._monitorName || lighthouseStat._monitor }}
@@ -54,9 +56,21 @@ export default {
 
     data() {
         return {
+            searchQuery: "",
             lighthouseStats: [],
             refreshIntervalId: null,
         };
+    },
+
+    computed: {
+        filteredLighthouseStats() {
+            if (!this.searchQuery) {
+                return this.lighthouseStats;
+            }
+            return this.lighthouseStats.filter(stat => 
+                stat._monitorName.toLowerCase().includes(this.searchQuery.toLowerCase())
+            );
+        }
     },
 
     mounted() {
