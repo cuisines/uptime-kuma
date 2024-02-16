@@ -885,8 +885,6 @@ let needSetup = false;
             try {
                 checkLogin(socket);
 
-                log.info("monitor", `Get Monitor: ${monitorID} User ID: ${socket.userID}`);
-
                 let bean = await R.findOne("monitor", " id = ? AND user_id = ? ", [
                     monitorID,
                     socket.userID,

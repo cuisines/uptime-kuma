@@ -19,7 +19,7 @@
                             <tr v-for="(lighthouseStat, index) in lighthouseStats.slice().reverse()" :key="index" :class="{ 'shadow-box': $root.windowWidth <= 550 }">
                                 <td>
                                     <router-link :to="`/dashboard/${lighthouseStat._monitor}`">
-                                        {{ lighthouseStat._monitor }}
+                                        {{ lighthouseStat._monitorName || lighthouseStat._monitor }}
                                     </router-link>
                                 </td>
                                 <td><Status :status="lighthouseStat._seo" :type="'lighthouse'" /></td>
@@ -69,11 +69,37 @@ export default {
     },
 
     methods: {
-        getLighthouseStats() {
-            this.$root.getSocket().emit("getLighthouseStats", (res) => {
+        async getLighthouseStats() {
+            this.$root.getSocket().emit("getLighthouseStats", async (res) => {
                 if (res.ok) {
-                    this.lighthouseStats = res.lighthouseStats;
+                    const tempStats = res.lighthouseStats;
+                    await this.fetchMonitorNames(tempStats);
+                    this.lighthouseStats = tempStats;
                 }
+            });
+        },
+
+        async fetchMonitorNames(stats) {
+            const uniqueMonitorIDs = Array.from(new Set(stats.map(stat => stat._monitor)));
+
+            const monitorNames = await Promise.all(uniqueMonitorIDs.map(id => new Promise((resolve) => {
+                this.$root.getSocket().emit("getMonitor", id, (response) => {
+                    if (response.ok) {
+                        resolve({ id, name: response.monitor.name });
+                    } else {
+                        console.error(`Failed to fetch monitor name for ID: ${id}`, response.msg);
+                        resolve({ id, name: id });
+                    }
+                });
+            })));
+
+            const nameMap = monitorNames.reduce((acc, { id, name }) => {
+                acc[id] = name;
+                return acc;
+            }, {});
+
+            stats.forEach(stat => {
+                stat._monitorName = nameMap[stat._monitor];
             });
         },
 
