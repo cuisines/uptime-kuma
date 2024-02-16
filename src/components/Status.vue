@@ -61,9 +61,9 @@ export default {
                 } else {
                     return "danger";
                 }
-            } 
+            }
 
-            return 'secondary';
+            return "secondary";
         },
         text() {
             // Add conditions based on the type prop
@@ -103,7 +103,7 @@ export default {
 
             } else if (this.type === "lighthouse") {
                 return this.status;
-            } 
+            }
             
             return this.$t("Unknown");
         },
