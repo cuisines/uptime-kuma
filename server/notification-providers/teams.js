@@ -12,12 +12,12 @@ class Teams extends NotificationProvider {
      * @param {string} monitorName Name of monitor
      * @param {string} monitorUrl URL of monitor
      * @param {number} monitorMaxRetries Number of retries before notification
-     * @param {number} monitorRetryInterval Time between retries
+     * @param {number} monitorInterval Time between checks
      * @returns {string} Status message
      */
-    _statusMessageFactory = (status, monitorName, monitorUrl, monitorMaxRetries, monitorRetryInterval) => {
+    _statusMessageFactory = (status, monitorName, monitorUrl, monitorMaxRetries, monitorInterval) => {
 
-        let downtime = monitorMaxRetries * monitorRetryInterval / 60;
+        let downtime = (monitorMaxRetries * monitorInterval + monitorInterval) / 60;
 
         if (status === DOWN) {
             if (downtime === 1) {
@@ -57,7 +57,7 @@ class Teams extends NotificationProvider {
      * @param {string} args.monitorUrl URL of monitor affected
      * @param {number} args.monitorId ID of monitor affected
      * @param {number} args.monitorMaxRetries Number of retries before notification
-     * @param {number} args.monitorRetryInterval Time between retries
+     * @param {number} args.monitorInterval Time between checks
      * @returns {object} Notification payload
      */
     _notificationPayloadFactory = async ({
@@ -67,14 +67,14 @@ class Teams extends NotificationProvider {
         monitorUrl,
         monitorId,
         monitorMaxRetries,
-        monitorRetryInterval,
+        monitorInterval,
     }) => {
         const notificationMessage = this._statusMessageFactory(
             status,
             monitorName,
             monitorUrl,
             monitorMaxRetries,
-            monitorRetryInterval
+            monitorInterval
         );
 
         const baseURL = await setting("primaryBaseURL");
@@ -208,7 +208,7 @@ class Teams extends NotificationProvider {
                 monitorUrl: url,
                 monitorId: monitorJSON.id,
                 monitorMaxRetries: monitorJSON.maxretries,
-                monitorRetryInterval: monitorJSON.retry_interval,
+                monitorInterval: monitorJSON.interval,
                 status: heartbeatJSON.status,
             });
 
