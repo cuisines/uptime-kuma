@@ -1554,6 +1554,29 @@ let needSetup = false;
             }
         });
 
+        socket.on("getLastLighthouseScore", async (monitorID, callback) => {
+            try {
+                checkLogin(socket);
+
+                log.info("lighthouse", `Get Last Lighthouse Score for ${monitorID} User ID: ${socket.userID}`);
+
+                const data = await R.getRow("SELECT * FROM lighthouse WHERE monitor = ? ORDER BY timestamp DESC LIMIT 1", [
+                    monitorID,
+                ]);
+
+                callback({
+                    ok: true,
+                    lighthouseScore: data,
+                });
+
+            } catch (e) {
+                callback({
+                    ok: false,
+                    msg: e.message,
+                });
+            }
+        });
+
         // Status Page Socket Handler for admin only
         statusPageSocketHandler(socket);
         cloudflaredSocketHandler(socket);

@@ -52,6 +52,7 @@ import {
     faCertificate,
     faRocket,
     faChartPie,
+    faClock,
 } from "@fortawesome/free-solid-svg-icons";
 
 library.add(
@@ -101,6 +102,7 @@ library.add(
     faCertificate,
     faRocket,
     faChartPie,
+    faClock,
 );
 
 export { FontAwesomeIcon };

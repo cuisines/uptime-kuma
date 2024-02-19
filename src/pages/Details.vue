@@ -179,6 +179,30 @@
                     </div>
                 </div>
             </transition>
+            
+            <div v-if="monitor.type === 'http'" class="btn-group lighthouse" role="group">
+                <div class="btn btn-normal metric">
+                    {{ $t("Last Lighthouse score:") }} 
+                </div>
+                <div class="btn btn-normal metric">
+                    {{ $t("SEO: ") }} {{ lighthouseScore.seo }}
+                </div>
+                <div class="btn btn-normal metric">
+                    {{ $t("Performance: ") }} {{ lighthouseScore.pd }} {{ $t("/") }} {{ lighthouseScore.pm }}
+                </div>
+                <div class="btn btn-normal metric">
+                    {{ $t("Accessibility: ") }} {{ lighthouseScore.ad }} {{ $t("/") }} {{ lighthouseScore.am }}
+                </div>
+                <div class="btn btn-normal metric">
+                    {{ $t("Best Practices: ") }} {{ lighthouseScore.bpd }} {{ $t("/") }} {{ lighthouseScore.bpm }}
+                </div>
+                <div class="btn btn-normal metric">
+                    <font-awesome-icon icon="clock" /> <Datetime :value="lighthouseScore.timestamp * 1000" />
+                </div>
+                <router-link :to="'/lighthouse/?searchQuery=' + this.monitor.name" class="btn btn-normal">
+                    <font-awesome-icon icon="search" /> {{ $t("More results") }}
+                </router-link>
+            </div>
 
             <!-- Ping Chart -->
             <div v-if="showPingChartBox" class="shadow-box big-padding text-center ping-chart-wrapper">
@@ -328,6 +352,7 @@ export default {
                 currentExample: "javascript-fetch",
                 code: "",
             },
+            lighthouseScore: [],
         };
     },
     computed: {
@@ -434,6 +459,8 @@ export default {
             }
             this.loadPushExample();
         }
+
+        this.getLastLighthouseScore();
     },
 
     beforeUnmount() {
@@ -659,7 +686,15 @@ export default {
                     .replace("https://example.com/api/push/key?status=up&msg=OK&ping=", this.pushURL);
                 this.pushMonitor.code = code;
             });
-        }
+        },
+
+        getLastLighthouseScore() {
+            this.$root.getSocket().emit("getLastLighthouseScore", this.monitor?.id, (res) => {
+                if (res.ok) {
+                    this.lighthouseScore = res.lighthouseScore;
+                }
+            });
+        },
     },
 };
 </script>
@@ -825,5 +860,14 @@ table {
     .dark & {
         opacity: 0.7;
     }
+}
+
+.lighthouse {
+    margin-top: 25px;
+}
+
+.metric {
+    cursor: default;
+    pointer-events: none;
 }
 </style>
