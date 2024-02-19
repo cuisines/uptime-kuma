@@ -24,10 +24,10 @@
                                         {{ lighthouseStat._monitorName || lighthouseStat._monitor }}
                                     </router-link>
                                 </td>
-                                <td><Status :status="lighthouseStat._seo" :type="'lighthouse'" /></td>
-                                <td><Status :status="lighthouseStat._pd" :type="'lighthouse'" /> / <Status :status="lighthouseStat._pm" :type="'lighthouse'" /></td>
-                                <td><Status :status="lighthouseStat._ad" :type="'lighthouse'" /> / <Status :status="lighthouseStat._am" :type="'lighthouse'" /></td>
-                                <td><Status :status="lighthouseStat._bpd" :type="'lighthouse'" /> / <Status :status="lighthouseStat._bpm" :type="'lighthouse'" /></td>
+                                <td>{{ lighthouseStat._seo }}</td>
+                                <td>{{ lighthouseStat._pd }} {{ $t("/") }} {{ lighthouseStat._pm }}</td>
+                                <td>{{ lighthouseStat._ad }} {{ $t("/") }} {{ lighthouseStat._am }}</td>
+                                <td>{{ lighthouseStat._bpd }} {{ $t("/") }} {{ lighthouseStat._bpm }}</td>
                                 <td><Datetime :value="lighthouseStat._timestamp * 1000" /></td>
                             </tr>
 
@@ -76,6 +76,12 @@ export default {
     mounted() {
         this.getLighthouseStats();
         this.setupAutoRefresh();
+
+        const queryParams = new URLSearchParams(window.location.search);
+        const searchQuery = queryParams.get('searchQuery');
+        if (searchQuery) {
+            this.searchQuery = searchQuery;
+        }
     },
 
     beforeUnmount() {
