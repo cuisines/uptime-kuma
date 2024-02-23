@@ -173,11 +173,14 @@ export default {
         },
 
         async submitForm() {
+            let startTimestamp = Date.parse(this.startTime);
+            let endTimestamp = Date.parse(this.endTime);
+
             const formData = {
                 selectedMonitors: this.selectedMonitors.map(monitor => monitor.id),
                 timeframe: {
-                    start: this.startTime,
-                    end: this.endTime,
+                    start: startTimestamp,
+                    end: endTimestamp,
                 },
                 frequency: this.frequency,
                 recipient: this.recipientEmail,
