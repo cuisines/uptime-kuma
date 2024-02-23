@@ -31,14 +31,14 @@
                         <font-awesome-icon icon="rocket" /> {{ $t("Pipelines") }}
                     </router-link>
                 </li>
-                <li>
-                    <router-link to="/report" class="nav-link">
-                        <font-awesome-icon icon="file" /> {{ $t("Reports") }}
-                    </router-link>
-                </li>
                 <li v-if="$root.loggedIn" class="nav-item me-2">
                     <router-link to="/lighthouse" class="nav-link">
                         <font-awesome-icon icon="chart-pie" /> {{ $t("Lighthouse") }}
+                    </router-link>
+                </li>
+                <li>
+                    <router-link to="/report" class="nav-link">
+                        <font-awesome-icon icon="file" /> {{ $t("Reports") }}
                     </router-link>
                 </li>
                 <li v-if="$root.loggedIn" class="nav-item me-2">

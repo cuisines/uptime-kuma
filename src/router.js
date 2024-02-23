@@ -168,12 +168,12 @@ const routes = [
                         component: Pipelines,
                     },
                     {
-                        path: "/report",
-                        component: Report,
-                    },
-                    {
                         path: "/lighthouse",
                         component: Lighthouse,
+                    },
+                    {
+                        path: "/report",
+                        component: Report,
                     },
                 ],
             },
