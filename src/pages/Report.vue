@@ -90,8 +90,9 @@
                     </div>
                 </div>
 
-                <div class="fixed-bottom-bar p-3">
+                <div class="fixed-bottom-bar p-3 d-flex">
                     <button id="monitor-submit-btn" class="btn btn-primary" type="submit" @click="submitForm">{{ $t("Create Report") }}</button>
+                    <div class="ms-3">{{ responseMessage }}</div>
                 </div>
             </div>
         </div>
@@ -156,6 +157,7 @@ export default {
             recipientEmail: "",
             reportingBackendToken: "",
             reportingBackendURL: "",
+            responseMessage: "",
         };
     },
 
@@ -170,7 +172,7 @@ export default {
             this.selectedMonitors = [];
         },
 
-        async submitForm() {       
+        async submitForm() {
             const formData = {
                 selectedMonitors: this.selectedMonitors.map(monitor => monitor.id),
                 timeframe: {
@@ -179,23 +181,20 @@ export default {
                 },
                 frequency: this.frequency,
                 recipient: this.recipientEmail,
-            }
+            };
 
-            axios.post(this.reportingBackendURL, formData, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    'x-api-key': `${this.reportingBackendToken}`,
-                }
-            }).then((res) => {
-                    if (res.ok) {
-                        this.$root.showSuccessToast("Report created successfully");
-                    } else {
-                        this.$root.showErrorToast("Failed to create report");
+            try {
+                const response = await axios.post(this.reportingBackendURL, formData, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'x-api-key': `${this.reportingBackendToken}`,
                     }
-                })
-                .catch((err) => {
-                    this.$root.showErrorToast("Failed to create report");
                 });
+                // Assuming the server sends back a JSON response with a message property
+                this.responseMessage = "Report created successfully. A mail should be sent soon.";
+            } catch (err) {
+                this.responseMessage = "Failed to create report. Please try again later. (2 minutes cooldown)";
+            }
         }
     }
 };
