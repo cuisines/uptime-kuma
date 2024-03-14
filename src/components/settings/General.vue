@@ -45,6 +45,44 @@
                 <div class="form-text">If specified, Teams notifications will include buttons to create a ticket with the notification information, or to search for existing tickets in that directory.</div>
             </div>
 
+            <!-- Reporting Backend URL -->
+            <div class="mb-4">
+                <label class="form-label" for="reportingBackendURL">
+                    {{ $t("Reporting Backend URL") }}
+                </label>
+                
+                <div class="input-group mb-3">
+                    <input
+                    id="reportingBackendURL"
+                    v-model="settings.reportingBackendURL"
+                    class="form-control"
+                    name="reportingBackendURL"
+                    placeholder="https://backend.url:8812/report"
+                    pattern="https?://.+"
+                    autocomplete="new-password"
+                />
+                </div>
+            </div>
+
+            <!-- Reporting Backend Token -->
+            <div class="mb-4">
+                <label class="form-label" for="reportingBackendToken">
+                    {{ $t("Reporting Backend Token") }}
+                </label>
+
+                <div class="input-group mb-3">
+                    <input
+                        id="reportingBackendToken"
+                        v-model="settings.reportingBackendToken"
+                        class="form-control"
+                        name="reportingBackendToken"
+                        placeholder="cgp9jwm.qaw*qvm7QYH"
+                        autocomplete="new-password"
+                        type="password"
+                    />
+                </div>
+            </div>
+
             <!-- Search Engine -->
             <div class="mb-4">
                 <label class="form-label">

@@ -623,6 +623,10 @@ $shadow-box-padding: 20px;
     }
 }
 
+.report-message {
+    padding-top: 6px;
+}
+
 @media (max-width: 770px) {
     .toast-container {
         margin-bottom: 100px !important;

@@ -62,11 +62,11 @@
                         </div>
                         <div class="col">
                             <div class="mb-2">{{ $t("Reporting Backend URL") }}</div>
-                            <input v-model="reportingBackendURL" type="email" class="form-control" placeholder="https://backend.url:8812/report">
+                            <input v-model="reportingBackendURL" type="email" class="form-control" placeholder="Please specify in Settings -> General" disabled>
                         </div>
                         <div class="col">
                             <div class="mb-2">{{ $t("Reporting Backend Token") }}</div>
-                            <input v-model="reportingBackendToken" type="email" class="form-control" placeholder="cgp9jwm.qaw*qvm7QYH">
+                            <input v-model="reportingBackendToken" type="password" class="form-control" placeholder="Please specify in Settings -> General" disabled>
                         </div>
                     </div>
                 </div>
@@ -92,7 +92,7 @@
 
                 <div class="fixed-bottom-bar p-3 d-flex">
                     <button id="monitor-submit-btn" class="btn btn-primary" type="submit" @click="submitForm">{{ $t("Create Report") }}</button>
-                    <div class="ms-3">{{ responseMessage }}</div>
+                    <div class="ms-3 report-message">{{ responseMessage }}</div>
                 </div>
             </div>
         </div>
@@ -110,7 +110,7 @@ export default {
 
     data() {
         return {
-            comparisonChecked: false,
+            // comparisonChecked: false,
             selectedMonitors: [],
             selectedMonitorsOptions: [],
             report: {},
@@ -159,6 +159,8 @@ export default {
             }
             this.init();
         });
+
+        this.loadSettings();
     },
 
     methods: {
@@ -170,6 +172,13 @@ export default {
         },
         deselectAllMonitors() {
             this.selectedMonitors = [];
+        },
+
+        loadSettings() {
+            this.$root.getSocket().emit("getSettings", (res) => {
+                this.reportingBackendURL = res.data.reportingBackendURL;
+                this.reportingBackendToken = res.data.reportingBackendToken;
+            });
         },
 
         async submitForm() {
