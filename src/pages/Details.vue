@@ -440,6 +440,9 @@ export default {
                 this.loadPushExample();
             }
         },
+        "monitor.id"() {
+            this.getLastLighthouseScore();
+        },
         "pushMonitor.currentExample"() {
             this.loadPushExample();
         },
