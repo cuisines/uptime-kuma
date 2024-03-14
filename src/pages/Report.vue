@@ -61,6 +61,10 @@
                             <input v-model="recipientEmail" type="email" class="form-control" placeholder="someone@cuisine.digital">
                         </div>
                         <div class="col">
+                            <div class="mb-2">{{ $t("Subject") }}</div>
+                            <input v-model="subject" type="email" class="form-control" placeholder="Your Website Report for March 2024">
+                        </div>
+                        <div class="col">
                             <div class="mb-2">{{ $t("Reporting Backend URL") }}</div>
                             <input v-model="reportingBackendURL" type="email" class="form-control" placeholder="Please specify in Settings -> General" disabled>
                         </div>
@@ -118,6 +122,7 @@ export default {
             endTime: "",
             frequency: "",
             recipientEmail: "",
+            subject: "",
             reportingBackendToken: "",
             reportingBackendURL: "",
             responseMessage: "",
@@ -193,6 +198,7 @@ export default {
                 },
                 frequency: this.frequency,
                 recipient: this.recipientEmail,
+                subject: this.subject,
             };
 
             try {
