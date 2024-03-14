@@ -34,18 +34,18 @@ class Teams extends NotificationProvider {
     };
 
     /**
-     * Select theme color to use based on status
+     * Select the style to use based on status
      * @param {const} status The status constant
-     * @returns {string} Selected color in hex RGB format
+     * @returns {string} Selected style for adaptive cards
      */
-    _getThemeColor = (status) => {
+    _getStyle = (status) => {
         if (status === DOWN) {
-            return "ff0000";
+            return "attention";
         }
         if (status === UP) {
-            return "00e804";
+            return "good";
         }
-        return "008cff";
+        return "emphasis";
     };
 
     /**
@@ -136,12 +136,18 @@ class Teams extends NotificationProvider {
             }
         }
 
-        return {
-            "@context": "https://schema.org/extensions",
-            "@type": "MessageCard",
-            themeColor: this._getThemeColor(status),
-            summary: notificationMessage,
-            sections: [
+        if (heartbeatJSON?.localDateTime) {
+            facts.push({
+                title: "Time",
+                value: heartbeatJSON.localDateTime + (heartbeatJSON.timezone ? ` (${heartbeatJSON.timezone})` : ""),
+            });
+        }
+
+        const payload = {
+            "type": "message",
+            // message with status prefix as notification text
+            "summary": this._statusMessageFactory(status, monitorName, true),
+            "attachments": [
                 {
                     activityTitle: notificationMessage,
                     activitySubtitle: "Reason: " + monitorMessage,
@@ -149,6 +155,15 @@ class Teams extends NotificationProvider {
             ],
             "potentialAction": actions,
         };
+
+        if (actions) {
+            payload.attachments[0].content.body.push({
+                "type": "ActionSet",
+                "actions": actions,
+            });
+        }
+
+        return payload;
     };
 
     /**
@@ -187,18 +202,18 @@ class Teams extends NotificationProvider {
                 return okMsg;
             }
 
-            let url;
+            let monitorUrl;
 
             switch (monitorJSON["type"]) {
                 case "http":
                 case "keywork":
-                    url = monitorJSON["url"];
+                    monitorUrl = monitorJSON["url"];
                     break;
                 case "docker":
-                    url = monitorJSON["docker_host"];
+                    monitorUrl = monitorJSON["docker_host"];
                     break;
                 default:
-                    url = monitorJSON["hostname"];
+                    monitorUrl = monitorJSON["hostname"];
                     break;
             }
 
