@@ -50,7 +50,6 @@ import Datetime from "../components/Datetime.vue";
 export default {
     components: {
         Datetime,
-        Status,
     },
 
     data() {

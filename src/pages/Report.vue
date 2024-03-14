@@ -35,12 +35,12 @@
                     <div class="row">
                         <div class="col">
                             <div class="mb-2">{{ $t("From") }}</div>
-                            <input type="datetime-local" v-model="startTime" class="form-control">
+                            <input v-model="startTime" type="datetime-local" class="form-control">
                         </div>
 
                         <div class="col">
                             <div class="mb-2">{{ $t("to") }}</div>
-                            <input type="datetime-local" v-model="endTime" class="form-control">
+                            <input v-model="endTime" type="datetime-local" class="form-control">
                         </div>
 
                         <div class="col">
@@ -58,21 +58,21 @@
                     <div class="row">
                         <div class="col">
                             <div class="mb-2">{{ $t("Recipient") }}</div>
-                            <input type="email" v-model="recipientEmail" class="form-control" placeholder="someone@cuisine.digital">
+                            <input v-model="recipientEmail" type="email" class="form-control" placeholder="someone@cuisine.digital">
                         </div>
                         <div class="col">
                             <div class="mb-2">{{ $t("Reporting Backend URL") }}</div>
-                            <input type="email" v-model="reportingBackendURL" class="form-control" placeholder="https://backend.url:8812/report">
+                            <input v-model="reportingBackendURL" type="email" class="form-control" placeholder="https://backend.url:8812/report">
                         </div>
                         <div class="col">
                             <div class="mb-2">{{ $t("Reporting Backend Token") }}</div>
-                            <input type="email" v-model="reportingBackendToken" class="form-control" placeholder="cgp9jwm.qaw*qvm7QYH">
+                            <input v-model="reportingBackendToken" type="email" class="form-control" placeholder="cgp9jwm.qaw*qvm7QYH">
                         </div>
                     </div>
                 </div>
 
                 <div class="my-3 form-check">
-                    <input id="compare" class="form-check-input" v-model="comparisonChecked" type="checkbox">
+                    <input id="compare" v-model="comparisonChecked" class="form-check-input" type="checkbox">
                     <label class="form-check-label" for="compare">
                         {{ $t("Comparison (WIP)") }}
                     </label>
