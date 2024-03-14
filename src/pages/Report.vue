@@ -4,47 +4,48 @@
             <h1>{{ $t("Create performance report") }}</h1>
             <div class="shadow-box shadow-box-with-fixed-bottom-bar">
                 <h2>{{ $t("Monitor(s)") }}</h2>
-                    <div class="my-3">
-                        <VueMultiselect
-                            id="selected_monitors"
-                            v-model="selectedMonitors"
-                            :options="selectedMonitorsOptions"
-                            track-by="id"
-                            label="pathName"
-                            :max="1"
-                            :multiple="true"
-                            :close-on-select="false"
-                            :clear-on-select="false"
-                            :preserve-search="true"
-                            :placeholder="$t('Pick monitor(s) to create a report for')"
-                            :preselect-first="false"
-                            :max-height="200"
-                            :taggable="false"
-                        ></VueMultiselect>
-                    </div>
+                <div class="my-3">
+                    <VueMultiselect
+                        id="selected_monitors"
+                        v-model="selectedMonitors"
+                        :options="selectedMonitorsOptions"
+                        track-by="id"
+                        label="pathName"
+                        :max="1"
+                        :multiple="true"
+                        :close-on-select="false"
+                        :clear-on-select="false"
+                        :preserve-search="true"
+                        :placeholder="$t('Pick monitor(s) to create a report for')"
+                        :preselect-first="false"
+                        :max-height="200"
+                        :taggable="false"
+                    ></VueMultiselect>
+                </div>
 
-                    <div class="row">
-                        <div class="col d-flex justify-content-start">
-                            <button @click="selectAllMonitors" class="btn btn-warning me-2" disabled>Select all monitors</button>
-                            <button @click="deselectAllMonitors" class="btn btn-danger" disabled>Deselect all Monitors</button>
-                        </div>
+                <div class="row">
+                    <div class="col d-flex justify-content-start">
+                        <button class="btn btn-warning me-2" disabled @click="selectAllMonitors">Select all monitors</button>
+                        <button class="btn btn-danger" disabled @click="deselectAllMonitors">Deselect all Monitors</button>
                     </div>
+                </div>
+
                 <div class="mt-4">
                     <h3>{{ $t("Timeframe") }}</h3>
                     <div class="row">
                         <div class="col">
                             <div class="mb-2">{{ $t("From") }}</div>
-                            <input type="datetime-local" class="form-control" v-model="startTime">
+                            <input type="datetime-local" v-model="startTime" class="form-control">
                         </div>
 
                         <div class="col">
                             <div class="mb-2">{{ $t("to") }}</div>
-                            <input type="datetime-local" class="form-control" v-model="endTime">
+                            <input type="datetime-local" v-model="endTime" class="form-control">
                         </div>
 
                         <div class="col">
                             <label for="strategy" class="form-label">{{ $t("1 dataset per..") }}</label>
-                            <select id="strategy" class="form-select" v-model="frequency">
+                            <select id="strategy" v-model="frequency" class="form-select">
                                 <option value="daily">{{ $t("day") }}</option>
                                 <option value="hourly">{{ $t("hour") }}</option>
                                 <option value="minutely">{{ $t("minute") }}</option>
@@ -57,28 +58,27 @@
                     <div class="row">
                         <div class="col">
                             <div class="mb-2">{{ $t("Recipient") }}</div>
-                            <input type="email" class="form-control" placeholder="someone@cuisine.digital" v-model="recipientEmail">
+                            <input type="email" v-model="recipientEmail" class="form-control" placeholder="someone@cuisine.digital">
                         </div>
                         <div class="col">
                             <div class="mb-2">{{ $t("Reporting Backend URL") }}</div>
-                            <input type="email" class="form-control" placeholder="https://backend.url:8812/report" v-model="reportingBackendURL">
+                            <input type="email" v-model="reportingBackendURL" class="form-control" placeholder="https://backend.url:8812/report">
                         </div>
                         <div class="col">
                             <div class="mb-2">{{ $t("Reporting Backend Token") }}</div>
-                            <input type="email" class="form-control" placeholder="cgp9jwm.qaw*qvm7QYH" v-model="reportingBackendToken">
+                            <input type="email" v-model="reportingBackendToken" class="form-control" placeholder="cgp9jwm.qaw*qvm7QYH">
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="my-3 form-check">
-                    <input id="compare" class="form-check-input" type="checkbox" v-model="comparisonChecked">
+                    <input id="compare" class="form-check-input" v-model="comparisonChecked" type="checkbox">
                     <label class="form-check-label" for="compare">
-                        {{ $t("Comparison (WIP)")}}
-                        
+                        {{ $t("Comparison (WIP)") }}
                     </label>
                 </div>
 
-                <div class="row mb-3" v-if="comparisonChecked">
+                <div v-if="comparisonChecked" class="row mb-3">
                     <div class="col">
                         <div class="mb-2">{{ $t("Compare to timeframe from") }}</div>
                         <input type="datetime-local" class="form-control">
@@ -106,6 +106,22 @@ import VueMultiselect from "vue-multiselect";
 export default {
     components: {
         VueMultiselect
+    },
+
+    data() {
+        return {
+            comparisonChecked: false,
+            selectedMonitors: [],
+            selectedMonitorsOptions: [],
+            report: {},
+            startTime: "",
+            endTime: "",
+            frequency: "",
+            recipientEmail: "",
+            reportingBackendToken: "",
+            reportingBackendURL: "",
+            responseMessage: "",
+        };
     },
 
     mounted() {
@@ -145,22 +161,6 @@ export default {
         });
     },
 
-    data() {
-        return {
-            comparisonChecked: false,
-            selectedMonitors: [],
-            selectedMonitorsOptions: [],
-            report: {},
-            startTime: "",
-            endTime: "",
-            frequency: "",
-            recipientEmail: "",
-            reportingBackendToken: "",
-            reportingBackendURL: "",
-            responseMessage: "",
-        };
-    },
-
     methods: {
         init() {
             this.selectedMonitors = [];
@@ -187,13 +187,12 @@ export default {
             };
 
             try {
-                const response = await axios.post(this.reportingBackendURL, formData, {
+                await axios.post(this.reportingBackendURL, formData, {
                     headers: {
-                        'Content-Type': 'application/json',
-                        'x-api-key': `${this.reportingBackendToken}`,
+                        "Content-Type": "application/json",
+                        "x-api-key": `${this.reportingBackendToken}`,
                     }
                 });
-                // Assuming the server sends back a JSON response with a message property
                 this.responseMessage = "Report created successfully. A mail should be sent soon.";
             } catch (err) {
                 this.responseMessage = "Failed to create report. Please try again later. (2 minutes cooldown)";

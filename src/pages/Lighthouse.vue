@@ -46,7 +46,6 @@
 
 <script>
 import Datetime from "../components/Datetime.vue";
-import Status from "../components/Status.vue";
 
 export default {
     components: {
@@ -78,7 +77,7 @@ export default {
         this.setupAutoRefresh();
 
         const queryParams = new URLSearchParams(window.location.search);
-        const searchQuery = queryParams.get('searchQuery');
+        const searchQuery = queryParams.get("searchQuery");
         if (searchQuery) {
             this.searchQuery = searchQuery;
         }

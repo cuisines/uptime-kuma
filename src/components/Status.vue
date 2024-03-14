@@ -104,7 +104,7 @@ export default {
             } else if (this.type === "lighthouse") {
                 return this.status;
             }
-            
+    
             return this.$t("Unknown");
         },
     },

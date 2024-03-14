@@ -179,10 +179,10 @@
                     </div>
                 </div>
             </transition>
-            
+
             <div v-if="monitor.type === 'http'" class="btn-group lighthouse" role="group">
                 <div class="btn btn-normal metric">
-                    {{ $t("Last Lighthouse score:") }} 
+                    {{ $t("Last Lighthouse score:") }}
                 </div>
                 <div class="btn btn-normal metric">
                     {{ $t("SEO: ") }} {{ lighthouseScore.seo }}
@@ -199,7 +199,7 @@
                 <div class="btn btn-normal metric">
                     <font-awesome-icon icon="clock" /> <Datetime :value="lighthouseScore.timestamp * 1000" />
                 </div>
-                <router-link :to="'/lighthouse/?searchQuery=' + this.monitor.name" class="btn btn-normal">
+                <router-link :to="'/lighthouse/?searchQuery=' + monitor.name" class="btn btn-normal">
                     <font-awesome-icon icon="search" /> {{ $t("More results") }}
                 </router-link>
             </div>
