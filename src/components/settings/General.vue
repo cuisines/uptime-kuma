@@ -50,17 +50,17 @@
                 <label class="form-label" for="reportingBackendURL">
                     {{ $t("Reporting Backend URL") }}
                 </label>
-                
+
                 <div class="input-group mb-3">
                     <input
-                    id="reportingBackendURL"
-                    v-model="settings.reportingBackendURL"
-                    class="form-control"
-                    name="reportingBackendURL"
-                    placeholder="https://backend.url:8812/report"
-                    pattern="https?://.+"
-                    autocomplete="new-password"
-                />
+                        id="reportingBackendURL"
+                        v-model="settings.reportingBackendURL"
+                        class="form-control"
+                        name="reportingBackendURL"
+                        placeholder="https://backend.url:8812/report"
+                        pattern="https?://.+"
+                        autocomplete="new-password"
+                    />
                 </div>
             </div>
 

@@ -180,7 +180,7 @@
                 </div>
             </transition>
 
-            <div v-if="monitor.type === 'http'" class="btn-group lighthouse" role="group">
+            <div v-if="lighthouseScore && monitor.type === 'http'" class="btn-group lighthouse" role="group">
                 <div class="btn btn-normal metric">
                     {{ $t("Last Lighthouse score:") }}
                 </div>
