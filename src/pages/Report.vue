@@ -11,7 +11,7 @@
                         :options="selectedMonitorsOptions"
                         track-by="id"
                         label="pathName"
-                        :max="1"
+                        :max="3"
                         :multiple="true"
                         :close-on-select="false"
                         :clear-on-select="false"
