@@ -11,7 +11,7 @@
                         :options="selectedMonitorsOptions"
                         track-by="id"
                         label="pathName"
-                        :max="3"
+                        :max="100"
                         :multiple="true"
                         :close-on-select="false"
                         :clear-on-select="false"
@@ -25,8 +25,8 @@
 
                 <div class="row">
                     <div class="col d-flex justify-content-start">
-                        <button class="btn btn-warning me-2" disabled @click="selectAllMonitors">Select all monitors</button>
-                        <button class="btn btn-danger" disabled @click="deselectAllMonitors">Deselect all Monitors</button>
+                        <button class="btn btn-warning me-2" @click="selectAllMonitors">Select all monitors</button>
+                        <button class="btn btn-danger" @click="deselectAllMonitors">Deselect all Monitors</button>
                     </div>
                 </div>
 
