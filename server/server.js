@@ -997,6 +997,10 @@ let needSetup = false;
                     socket.userID,
                 ]);
 
+                await R.exec("DELETE FROM lighthouse WHERE monitor = ? ", [
+                    monitorID,
+                ]);
+
                 // Fix #2880
                 apicache.clear();
 
