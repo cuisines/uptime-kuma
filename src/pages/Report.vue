@@ -75,6 +75,15 @@
                     </div>
                 </div>
 
+                <div class="mt-4">
+                    <div class="row">
+                        <div class="col">
+                            <div class="mb-2">{{ $t("Body") }}</div>
+                            <input v-model="body" type="text" class="form-control" placeholder="Hi, you'll find the report(s) you requested attached to this mail.">
+                        </div>
+                    </div>
+                </div>
+
                 <div class="my-3 form-check">
                     <input id="compare" v-model="comparisonChecked" class="form-check-input" type="checkbox">
                     <label class="form-check-label" for="compare">
@@ -123,6 +132,7 @@ export default {
             frequency: "",
             recipientEmail: "",
             subject: "",
+            body: "",
             reportingBackendToken: "",
             reportingBackendURL: "",
             responseMessage: "",
@@ -198,7 +208,8 @@ export default {
                 },
                 frequency: this.frequency,
                 recipient: this.recipientEmail,
-                subject: this.subject,
+                subject: this.subject !== "" ? this.subject : "Report",
+                body: this.body !== "" ? this.body : "Hi, you'll find the report(s) you requested attached to this mail.",
             };
 
             try {
