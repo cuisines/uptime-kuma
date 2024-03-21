@@ -18,7 +18,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="(lighthouseStat, index) in filteredLighthouseStats.slice().reverse()" :key="index" :class="{ 'shadow-box': $root.windowWidth <= 550 }">
+                            <tr v-for="(lighthouseStat, index) in filteredLighthouseStats.slice()" :key="index" :class="{ 'shadow-box': $root.windowWidth <= 550 }">
                                 <td>
                                     <router-link :to="`/dashboard/${lighthouseStat._monitor}`">
                                         {{ lighthouseStat._monitorName || lighthouseStat._monitor }}
@@ -38,6 +38,15 @@
                             </tr>
                         </tbody>
                     </table>
+
+                    <div class="d-flex justify-content-center kuma_pagination">
+                        <pagination
+                            v-model="page"
+                            :records="totalFilteredRecords"
+                            :per-page="perPage"
+                            :options="paginationConfig"
+                        />
+                    </div>
                 </div>
             </div>
         </div>
@@ -46,10 +55,12 @@
 
 <script>
 import Datetime from "../components/Datetime.vue";
+import Pagination from "v-pagination-3";
 
 export default {
     components: {
         Datetime,
+        Pagination,
     },
 
     data() {
@@ -57,17 +68,33 @@ export default {
             searchQuery: "",
             lighthouseStats: [],
             refreshIntervalId: null,
+            page: 1,
+            perPage: 25,
+            paginationConfig: {
+                chunksNavigation: "scroll",
+            },
         };
     },
 
     computed: {
-        filteredLighthouseStats() {
-            if (!this.searchQuery) {
-                return this.lighthouseStats;
+        totalFilteredRecords() {
+            if (this.searchQuery) {
+                return this.lighthouseStats.filter(stat => 
+                    stat._monitorName.toLowerCase().includes(this.searchQuery.toLowerCase())
+                ).length;
             }
-            return this.lighthouseStats.filter(stat =>
+            return this.lighthouseStats.length;
+        },
+        filteredLighthouseStats() {
+            let result = this.searchQuery ? this.lighthouseStats.filter(stat =>
                 stat._monitorName.toLowerCase().includes(this.searchQuery.toLowerCase())
-            );
+            ) : this.lighthouseStats;
+
+            const start = (this.page - 1) * this.perPage;
+            const end = start + this.perPage;
+
+
+            return result.slice(start, end);
         }
     },
 
@@ -91,6 +118,7 @@ export default {
             this.$root.getSocket().emit("getLighthouseStats", async (res) => {
                 if (res.ok) {
                     const tempStats = res.lighthouseStats;
+                    tempStats.sort((a, b) => b._timestamp - a._timestamp);
                     await this.fetchMonitorNames(tempStats);
                     this.lighthouseStats = tempStats;
                 }
