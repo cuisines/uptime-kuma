@@ -42,7 +42,26 @@
                         autocomplete="new-password"
                     />
                 </div>
-                <div class="form-text">If specified, Teams notifications will include buttons to create a ticket with the notification information, or to search for existing tickets in that directory.</div>
+            </div>
+
+            <!-- DevOps iteration path -->
+            <div class="mb-4">
+                <label class="form-label" for="devopsIterationPath">
+                    {{ $t("DevOps iteration path") }}
+                </label>
+
+                <div class="input-group mb-3">
+                    <input
+                        id="devopsIterationPath"
+                        v-model="settings.devopsIterationPath"
+                        class="form-control"
+                        name="devopsIterationPath"
+                        placeholder="project/iteration"
+                        pattern="[a-zA-Z0-9-]+\/[a-zA-Z0-9-]+"
+                        autocomplete="new-password"
+                    />
+                </div>
+                <div class="form-text">If project directory and iteration path are specified, Teams notifications will include buttons to create a ticket with the notification information, or to search for existing tickets in that directory.</div>
             </div>
 
             <!-- Reporting Backend URL -->
