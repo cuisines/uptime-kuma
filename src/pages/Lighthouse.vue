@@ -79,7 +79,7 @@ export default {
     computed: {
         totalFilteredRecords() {
             if (this.searchQuery) {
-                return this.lighthouseStats.filter(stat => 
+                return this.lighthouseStats.filter(stat =>
                     stat._monitorName.toLowerCase().includes(this.searchQuery.toLowerCase())
                 ).length;
             }
@@ -92,7 +92,6 @@ export default {
 
             const start = (this.page - 1) * this.perPage;
             const end = start + this.perPage;
-
 
             return result.slice(start, end);
         }

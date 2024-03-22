@@ -129,7 +129,7 @@ class Teams extends NotificationProvider {
                         {
                             os: "default",
                             uri:
-                                "https://dev.azure.com/" + devopsDirectory + "/_workitems/create/Issue?[System.Title]=" + monitorName + "%20(" + monitorUrl + ")%20is%20down&[System.Description]=" + monitorMessage,
+                                "https://dev.azure.com/" + devopsDirectory + "/_workitems/create/Issue?[System.Title]=" + monitorName + "%20(" + monitorUrl + ")%20is%20down&[System.Description]=" + monitorMessage + "&[System.IterationPath]=" + devopsDirectory,
                         },
                     ],
                 });
