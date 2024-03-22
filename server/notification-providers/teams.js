@@ -80,6 +80,7 @@ class Teams extends NotificationProvider {
         const baseURL = await setting("primaryBaseURL");
         const devopsDirectory = await setting("devopsDirectory");
         const devopsIterationPath = await setting("devopsIterationPath");
+        const devopsAssignee = await setting("devopsAssignee");
 
         const actions = [];
 
@@ -116,7 +117,7 @@ class Teams extends NotificationProvider {
                         {
                             os: "default",
                             uri:
-                                "https://dev.azure.com/" + devopsDirectory + "/_sprints/taskboard/" + devopsIterationPathPath,
+                                "https://dev.azure.com/" + devopsDirectory + "/_sprints/taskboard/" + devopsIterationPath,
                         },
                     ],
                 });
@@ -130,7 +131,7 @@ class Teams extends NotificationProvider {
                         {
                             os: "default",
                             uri:
-                                "https://dev.azure.com/" + devopsDirectory + "/_workitems/create/Task?[System.Title]=" + monitorName + "%20(" + monitorUrl + ")%20is%20down&[System.Description]=" + monitorMessage + "&[System.IterationPath]=" + devopsIterationPath + "&[System.AreaPath]=" + devopsIterationPath,
+                                "https://dev.azure.com/" + devopsDirectory + "/_workitems/create/Task?[System.Title]=" + monitorName + "%20(" + monitorUrl + ")%20is%20down&[System.Description]=" + monitorMessage + "&[System.IterationPath]=" + devopsIterationPath + "&[System.AreaPath]=" + devopsIterationPath + "&[System.AssignedTo]=" + devopsAssignee,
                         },
                     ],
                 });

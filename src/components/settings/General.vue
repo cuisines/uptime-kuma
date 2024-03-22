@@ -64,6 +64,27 @@
                 <div class="form-text">If project directory and iteration path are specified, Teams notifications will include buttons to create a ticket with the notification information, or to search for existing tickets in that directory.</div>
             </div>
 
+            <!-- DevOps assignee -->
+            <div class="mb-4">
+                <label class="form-label" for="devopsAssignee">
+                    {{ $t("DevOps assignee") }}
+                </label>
+
+                <div class="input-group mb-3">
+                    <input
+                        id="devopsAssignee"
+                        v-model="settings.devopsAssignee"
+                        class="form-control"
+                        name="devopsAssignee"
+                        placeholder="someone@cuisine.digital"
+                        pattern=".+@.+\..+"
+                        autocomplete="new-password"
+                    />
+                </div>
+                <div class="form-text">If specified, the prepopulated ticket creation form will include this assignee.</div>
+            </div>
+
+
             <!-- Reporting Backend URL -->
             <div class="mb-4">
                 <label class="form-label" for="reportingBackendURL">
