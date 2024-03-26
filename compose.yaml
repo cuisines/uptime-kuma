@@ -1,9 +1,31 @@
 services:
   uptime-kuma:
-    image: louislam/uptime-kuma:1
-    volumes:
-      - ./data:/app/data
+    restart: always
     ports:
-      # <Host Port>:<Container Port>
       - 3001:3001
-    restart: unless-stopped
+    volumes:
+      - cuisinekuma:/app/data
+    networks:
+      - cuisinekuma
+    container_name: cuisineskuma
+    image: larswmh/uptime-kuma:nightly2-rootless
+  mariadb:
+    restart: always
+    ports:
+      - 3306:3306
+    networks:
+      - cuisinekuma
+    container_name: cuisinesmdb
+    image: mariadb:latest
+  extras:
+    restart: always
+    ports:
+      - 3005:3005
+    networks:
+      - cuisinekuma
+    container_name: cuisines-kuma-extras
+    image: larswmh/kuma-extras:latest
+networks:
+  cuisinekuma: {}
+volumes:
+  cuisinekuma: {}
